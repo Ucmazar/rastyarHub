@@ -1,0 +1,10 @@
+<!-- accounts/templates/accounts/user_create.html -->
+<h2>ثبت کاربر جدید</h2>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ثبت</button>
+</form>
+
+<a href="{% url 'user_list' %}">بازگشت به لیست کاربران</a>

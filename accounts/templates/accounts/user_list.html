@@ -1,0 +1,31 @@
+<div style="text-align: left;">
+    <p>سلام {{ request.user.username }} عزیز!</p>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">خروج</button>
+    </form>
+</div>
+<h2>لیست کاربران</h2>
+<table>
+    <thead>
+        <tr>
+            <th>نام کاربری</th>
+            <th>نقش</th>
+            <th>عملیات</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td><a href="{% url 'profile' %}">{{ user.username }}</a></td>
+            <td>{{ user.role }}</td>
+            <td>
+                <a href="{% url 'user_update' user.pk %}">ویرایش</a> |
+                <a href="{% url 'user_delete' user.pk %}">حذف</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'user_create' %}">کاربر جدید</a>

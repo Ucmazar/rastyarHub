@@ -1,0 +1,87 @@
+rastyar_hub/
+│
+├── manage.py
+├── requirements.txt
+├── .env
+│
+├── config/         # تنظیمات کلی پروژه
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+│
+├── accounts/               # مدیریت کاربران و نقش‌ها
+│   ├── models.py           # UserProfile و نقش‌ها (student, teacher, admin, parent)
+│   ├── views.py
+│   ├── serializers.py
+│   ├── permissions.py
+│   ├── urls.py
+│   └── admin.py
+│
+├── admins/                 # مدیریت مخصوص مدیران مکاتب
+│   ├── models.py           # AdminProfile
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── teachers/               # مدیریت معلمان
+│   ├── models.py           # TeacherProfile
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── students/               # مدیریت شاگردان
+│   ├── models.py           # StudentProfile (اشاره به UserProfile)
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── parents/                # مدیریت والدین
+│   ├── models.py           # ParentProfile
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── classes/                # صنف‌ها و تقسیم‌بندی‌ها
+│   ├── models.py           # Class, Subject
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── grades/                 # نمرات، قبولی/رد
+│   ├── models.py           # Grade, ReportCard
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── attendance/             # حضور و غیاب
+│   ├── models.py           # AttendanceRecord
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+├── chat/                   # گفت‌وگو بین شاگرد، معلم، والدین (در آینده)
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── serializers.py
+│   └── admin.py
+│
+└── utils/                  # ابزارهای کمکی، mixinها، permissionها
+    ├── permissions.py
+    ├── mixins.py
+    └── helpers.py
+
+
+
+
+
+template base and other tempate on accounts

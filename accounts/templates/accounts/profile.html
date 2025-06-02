@@ -1,0 +1,21 @@
+<h2>پروفایل من</h2>
+<p>نام کاربری: {{ user.username }}</p>
+<p>ایمیل: {{ user.email }}</p>
+<p>نقش: {{ user.role }}</p>
+<p>جنسیت: {{ user.get_gender_display }}</p>
+<p>شماره تماس: {{ user.phone_number }}</p>
+{% if user.profile_picture %}
+    <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="150">
+{% else %}
+    <p>تصویر پروفایل ثبت نشده</p>
+{% endif %}
+
+<a href="{% url 'profile_edit' %}">ویرایش پروفایل</a>
+<a href="{% url 'user_list' %}">بازگشت به لیست کاربران</a>
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" style="background-color:#e53935; color:white; border:none; padding: 10px 20px; border-radius: 5px; cursor:pointer;">
+        خروج
+    </button>
+</form>
+

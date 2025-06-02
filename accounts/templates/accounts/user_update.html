@@ -1,0 +1,7 @@
+<h2>ویرایش کاربر</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ذخیره</button>
+</form>
+<a href="{% url 'user_list' %}">بازگشت به لیست کاربران</a>

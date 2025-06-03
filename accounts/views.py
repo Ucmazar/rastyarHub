@@ -4,9 +4,10 @@ from .models import CustomUser
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CustomUserUpdateForm, CustomUserCreateForm, LoginForm
+from .forms import CustomUserUpdateForm, CustomUserCreateForm, LoginForm, CustomUserSignupForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 
 
@@ -89,3 +90,14 @@ def login_view(request):
                 message = "نام کاربری یا رمز عبور نادرست است."
 
     return render(request, 'accounts/login.html', {'form': form, 'message': message})
+
+def signup_view(request):
+    if request.method == 'POST':
+        form = CustomUserSignupForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'ثبت‌نام با موفقیت انجام شد.')
+            return redirect('login')  # یا مسیر دلخواه شما
+    else:
+        form = CustomUserSignupForm()
+    return render(request, 'accounts/signup.html', {'form': form})

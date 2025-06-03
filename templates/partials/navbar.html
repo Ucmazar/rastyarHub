@@ -65,8 +65,8 @@
                 </ul>
                 {% else %}
                 <div class="d-flex gap-2">
-                  <a href="{% url 'login' %}" class="btn btn-sm btn-outline-light">ورود</a>
-                  <a href="#" class="btn btn-sm btn-primary">ثبت‌نام</a>
+                  <a href="{% url 'login' %}" class="text-success" style="text-decoration: none;">ورود</a>
+                  <a href="{% url 'signup' %}" class="text-primary" style="text-decoration: none;">ثبت‌نام</a>
                 </div>
                 {% endif %}
             </li>

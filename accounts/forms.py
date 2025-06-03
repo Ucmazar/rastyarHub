@@ -1,5 +1,6 @@
 from django import forms
 from .models import CustomUser
+from django.contrib.auth.forms import UserCreationForm
 
 
 
@@ -80,3 +81,31 @@ class LoginForm(forms.Form):
             'placeholder': 'رمز عبور را وارد کنید'
         })
     )
+
+
+
+
+class CustomUserSignupForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'phone_number', 'profile_picture', 'role', 'gender', 'password1', 'password2']
+        labels = {
+            'username': 'نام کاربری',
+            'email': 'ایمیل',
+            'phone_number': 'شماره تماس',
+            'profile_picture': 'تصویر پروفایل',
+            'role': 'نقش',
+            'gender': 'جنسیت',
+            'password1': 'رمز عبور',
+            'password2': 'تکرار رمز عبور',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.FileInput):
+                field.widget.attrs['class'] = 'form-control-file'
+            elif isinstance(field.widget, (forms.Select, forms.SelectMultiple)):
+                field.widget.attrs['class'] = 'form-select'
+            else:
+                field.widget.attrs['class'] = 'form-control'

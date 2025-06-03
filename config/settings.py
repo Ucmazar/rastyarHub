@@ -128,3 +128,17 @@ MEDIA_URL = '/media/'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/profile/'  # یا هر صفحه‌ای که کاربر بعد از ورود بره
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+
+
+STATIC_URL = '/static/'
+
+# اگر فایل استاتیک در root داری:
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# در settings.py مطمئن شو زبان پیش‌فرض پروژه فارسی است
+LANGUAGE_CODE = 'fa'
+TIME_ZONE = 'Asia/Kabul'  # یا 'Asia/Tehran' اگر مناسب‌تر است
+USE_I18N = True
+USE_L10N = True

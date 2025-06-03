@@ -1,7 +1,33 @@
-<h2>آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</h2>
-<p>کاربر: {{ object.username }}</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">حذف</button>
-    <a href="{% url 'user_list' %}">انصراف</a>
-</form>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white text-center rounded-top">
+          <h5 class="mb-0">⚠️ حذف کاربر</h5>
+        </div>
+        <div class="card-body text-center">
+          <p class="fs-5 mb-4 text-danger">آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟</p>
+          
+          <div class="alert alert-warning">
+            <strong>کاربر:</strong> {{ object.get_full_name|default:object.username }}
+          </div>
+
+          <form method="post" class="d-flex justify-content-center gap-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+              🗑️ بله، حذف شود
+            </button>
+            <a href="{% url 'user_list' %}" class="btn btn-secondary">
+              ❌ انصراف
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

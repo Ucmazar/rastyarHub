@@ -84,4 +84,3 @@ rastyar_hub/
 
 
 
-template base and other tempate on accounts

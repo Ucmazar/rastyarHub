@@ -1,31 +1,104 @@
-<div style="text-align: left;">
-    <p>سلام {{ request.user.username }} عزیز!</p>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">خروج</button>
-    </form>
-</div>
-<h2>لیست کاربران</h2>
-<table>
-    <thead>
-        <tr>
-            <th>نام کاربری</th>
-            <th>نقش</th>
-            <th>عملیات</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td><a href="{% url 'profile' %}">{{ user.username }}</a></td>
-            <td>{{ user.role }}</td>
-            <td>
-                <a href="{% url 'user_update' user.pk %}">ویرایش</a> |
-                <a href="{% url 'user_delete' user.pk %}">حذف</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 
-<a href="{% url 'user_create' %}">کاربر جدید</a>
+<!--begin::App Content-->
+<div class="app-content mt-4">
+    <!--begin::Container-->
+    <div class="container-fluid">
+        <!--begin::Row-->
+        <div class="row">
+            <div class="col-12">
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">لیست کاربران</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'user_create' %}" class="btn btn-primary">کاربر جدید</a>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-body p-0 table-responsive-md">
+                            <table class="table table-sm table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>تصویر</th>
+                                        <th>نام کاربری</th>
+                                        <th>نقش</th>
+                                        <th>شماره تماس</th>
+                                        <th>ساخته شده توسط</th>
+                                        <th style="width: 50px; font-size: 15px;">عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+
+                                        <td>
+                                            <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'dist/assets/img/avatar5.png' %}{% endif %}"
+                                                alt="Profile" class="rounded-circle shadow-sm" width="32" height="32">
+                                        </td>
+
+                                        <td>
+                                            <a href="#">
+                                                {{ user.username }}
+                                            </a>
+                                        </td>
+
+                                        <td>{{ user.get_role_display }}</td>
+
+                                        <td>{{ user.phone_number|default:"-" }}</td>
+
+                                        <td>
+                                            {% if user.created_by %}
+                                            {{ user.created_by.get_full_name|default:user.created_by.username }}
+                                            {% else %}
+                                            {{ user.get_full_name|default:user.username }}
+                                            {% endif %}
+
+
+                                        </td>
+
+                                        <td>
+                                            <a href="{% url 'user_update' user.pk %}" class="text-primary"
+                                                title="ویرایش">
+                                                <i class="fas fa-edit"></i>
+                                            </a> |
+                                            <a href="{% url 'user_delete' user.pk %}" class="text-danger" title="حذف">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">هیچ کاربری ثبت نشده است.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+                        <ul class="pagination pagination-sm m-0 float-end">
+                            <li class="page-item"><a class="page-link" href="#">«</a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">»</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.card-footer-->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+{% endblock %}

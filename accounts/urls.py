@@ -8,6 +8,7 @@ from .views import (
     UserProfileView,
     UserProfileUpdateView,
     signup_view,
+    login_view,
 )
 
 from django.contrib.auth.views import LoginView, LogoutView
@@ -21,7 +22,8 @@ urlpatterns = [
     path('profile/edit/', UserProfileUpdateView.as_view(), name='profile_edit'),
     
     
-    path('login/', LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    # path('login/', LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('login/', login_view, name='login'),
     path('signup/', signup_view, name='signup'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 

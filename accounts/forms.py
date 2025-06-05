@@ -88,24 +88,19 @@ class LoginForm(forms.Form):
 class CustomUserSignupForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'phone_number', 'profile_picture', 'role', 'gender', 'password1', 'password2']
+        fields = ['username', 'email', 'phone_number', 'profile_picture', 'gender', 'role', 'password1', 'password2']
         labels = {
             'username': 'نام کاربری',
             'email': 'ایمیل',
             'phone_number': 'شماره تماس',
-            'profile_picture': 'تصویر پروفایل',
-            'role': 'نقش',
+            'profile_picture': 'عکس پروفایل',
             'gender': 'جنسیت',
+            'role': 'نقش',
             'password1': 'رمز عبور',
-            'password2': 'تکرار رمز عبور',
+            'password2': 'تأیید رمز عبور',
         }
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            if isinstance(field.widget, forms.FileInput):
-                field.widget.attrs['class'] = 'form-control-file'
-            elif isinstance(field.widget, (forms.Select, forms.SelectMultiple)):
-                field.widget.attrs['class'] = 'form-select'
-            else:
-                field.widget.attrs['class'] = 'form-control'
+        super(CustomUserSignupForm, self).__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

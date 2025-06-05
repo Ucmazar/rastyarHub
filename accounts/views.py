@@ -8,10 +8,11 @@ from .forms import CustomUserUpdateForm, CustomUserCreateForm, LoginForm, Custom
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from .mixins import RoleRequiredMixin
 
 
 
-class CustomUserCreationForm(forms.ModelForm):
+class CustomUserCreationForm(LoginRequiredMixin, forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = CustomUser
@@ -25,34 +26,40 @@ class CustomUserCreationForm(forms.ModelForm):
         return user
 
 
-class CustomUserCreateView(CreateView):
+class CustomUserCreateView(LoginRequiredMixin, CreateView):
     model = CustomUser
     form_class = CustomUserCreateForm
     template_name = 'accounts/user_create.html'
     success_url = reverse_lazy('user_list')
-
+    
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
 
-
-class CustomUserListView(ListView):
+class CustomUserListView(RoleRequiredMixin, LoginRequiredMixin, ListView):
+    required_role = None
     model = CustomUser
     template_name = 'accounts/user_list.html'
     context_object_name = 'users'
-    
-    
+    required_role = 'admin'  # اینجا نقش مورد نظر را مشخص می‌کنی
+    def get_queryset(self):
+        return CustomUser.objects.filter(created_by=self.request.user)
+
 class CustomUserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
     template_name = 'accounts/user_update.html'
     success_url = reverse_lazy('user_list')
-    
+    def get_queryset(self):
+        return CustomUser.objects.filter(created_by=self.request.user)
+
 class CustomUserDeleteView(DeleteView):
     model = CustomUser
     template_name = 'accounts/user_confirm_delete.html'
     success_url = reverse_lazy('user_list')
+    def get_queryset(self):
+        return CustomUser.objects.filter(created_by=self.request.user)
     
 class UserProfileView(LoginRequiredMixin, DetailView):
     model = CustomUser
@@ -61,7 +68,8 @@ class UserProfileView(LoginRequiredMixin, DetailView):
     def get_object(self):
         # فقط پروفایل خود کاربر
         return self.request.user
-    
+
+
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm  # یا فرم ویرایش مخصوص پروفایل
@@ -75,7 +83,6 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     
 def login_view(request):
     form = LoginForm(request.POST or None)
-    message = None
 
     if request.method == 'POST':
         if form.is_valid():
@@ -85,19 +92,33 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('user_list')  # یا صفحه مورد نظر شما
+                messages.success(request, f"{user.get_full_name()} عزیز خوش آمدید!")
+                return redirect('user_list')  # یا مسیر مورد نظر شما
             else:
-                message = "نام کاربری یا رمز عبور نادرست است."
+                messages.error(request, "نام کاربری یا رمز عبور نادرست است.")
 
-    return render(request, 'accounts/login.html', {'form': form, 'message': message})
+    return render(request, 'accounts/login.html', {'form': form})
+
+
 
 def signup_view(request):
+    message = None
     if request.method == 'POST':
         form = CustomUserSignupForm(request.POST, request.FILES)
+
+        if request.method == 'POST':
+            form = CustomUserSignupForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'ثبت‌نام با موفقیت انجام شد.')
-            return redirect('login')  # یا مسیر دلخواه شما
+            return redirect('login')
+        else:
+            message = "لطفاً خطاهای زیر را بررسی کنید."
     else:
         form = CustomUserSignupForm()
+
     return render(request, 'accounts/signup.html', {'form': form})
+
+
+
+def custom_page_not_found_view(request, exception):
+    return render(request, "404.html", status=404)

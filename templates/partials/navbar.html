@@ -1,5 +1,7 @@
 {% load static %}
 <nav class="app-header navbar navbar-expand bg-body">
+
+
     <!--begin::Container-->
     <div class="container-fluid">
         <!--begin::Start Navbar Links-->
@@ -11,6 +13,21 @@
             </li>
 
         </ul>
+
+        {% if messages %}
+        <div class="container mt-2">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show py-2 px-2" role="alert" style="font-size: 0.8rem; margin-bottom: 4px; line-height: 1.2;">
+              <div class="d-flex justify-content-between align-items-center">
+                <span>{{ message }}</span>
+                <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close" style="width: 0.75rem; height: 0.75rem;"></button>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+
         <!--end::Start Navbar Links-->
         <!--begin::End Navbar Links-->
         <ul class="navbar-nav ms-auto">
@@ -65,8 +82,8 @@
                 </ul>
                 {% else %}
                 <div class="d-flex gap-2">
-                  <a href="{% url 'login' %}" class="text-success" style="text-decoration: none;">ورود</a>
-                  <a href="{% url 'signup' %}" class="text-primary" style="text-decoration: none;">ثبت‌نام</a>
+                    <a href="{% url 'login' %}" class="text-success" style="text-decoration: none;">ورود</a>
+                    <a href="{% url 'signup' %}" class="text-primary" style="text-decoration: none;">ثبت‌نام</a>
                 </div>
                 {% endif %}
             </li>
@@ -77,3 +94,5 @@
     </div>
     <!--end::Container-->
 </nav>
+
+

@@ -10,12 +10,7 @@
           <h4 class="mb-0">ورود به سیستم</h4>
         </div>
         <div class="card-body">
-          {% if message %}
-            <div class="alert alert-danger text-center">
-              {{ message }}
-            </div>
-          {% endif %}
-
+          
           <form method="post" novalidate>
             {% csrf_token %}
 

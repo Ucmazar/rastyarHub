@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-content mt-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                  <div class="card-tools">
+                    <div class="card-header">
+                        <h3 class="card-title">پروفایل معلم</h3>
+                        <div class="card-tools">
+                            <!-- <button type="button" class="btn btn-sm btn-secondary" onclick="history.back();">
+                                برگشت
+                            </button> -->
+                            <a href="{% url 'user_list' %}" class="btn btn-sm btn-secondary">لیست</a>
+                        </div>
+                    </div>
+
+                    <div class="container my-4">
+                        <div class="row">
+                            <!-- ستون راست: اطلاعات اصلی -->
+                            <div class="col-md-4 mb-3">
+                                <div class="card shadow-sm border-0 p-3 text-center">
+                                    <div class="d-flex flex-column align-items-center mb-4">
+                                        <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'dist/assets/img/avatar5.png' %}{% endif %}"
+                                             class="rounded-circle border shadow mb-3"
+                                             width="120" height="120"
+                                             alt="User Image">
+                                        <h5 class="card-title text-primary mb-0">
+                                            {{ request.teacher.get_full_name|default:teacher.username }}
+                                        </h5>
+                                    </div>
+                                    
+                                    <div class="text-start">
+                                        <p class="text-muted mb-2">
+                                            <i class="bi bi-person-badge-fill me-1"></i>{{ teacher.get_role_display }}
+                                        </p>
+                                        {% if teacher.gender %}
+                                        <p class="mb-1">
+                                            <i class="bi bi-gender-ambiguous me-1"></i>
+                                            {% if teacher.gender == 'male' %} مرد {% elif teacher.gender == 'female' %} زن {% else %} سایر {% endif %}
+                                        </p>
+                                        {% endif %}
+                                        {% if teacher.phone_number %}
+                                        <p class="mb-1">
+                                            <i class="bi bi-telephone-fill me-1"></i>{{ teacher.phone_number }}
+                                        </p>
+                                        {% endif %}
+                                        {% if teacher.email %}
+                                        <p class="mb-3">
+                                            <i class="bi bi-envelope-fill me-1"></i>{{ teacher.email }}
+                                        </p>
+                                        {% endif %}
+
+                                        <div class="user-footer d-flex justify-content-between align-items-center p-2 border-top">
+                                            <a href="{% url 'profile_edit' %}" class="btn btn-primary btn-sm">
+                                                ویرایش پروفایل
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ستون چپ: اطلاعات تکمیلی -->
+                            <div class="col-md-8">
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-header bg-light">
+                                        <strong>اطلاعات تکمیلی</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <dl class="row">
+                                            <dt class="col-sm-4">نام کاربری</dt>
+                                            <dd class="col-sm-8">{{ teacher.username }}</dd>
+
+                                            <dt class="col-sm-4">نام پدر</dt>
+                                            <dd class="col-sm-8">{{ teacher.profile.father_name|default:"-" }}</dd>
+
+                                            <dt class="col-sm-4">تحصیلات</dt>
+                                            <dd class="col-sm-8">{{ teacher.profile.education|default:"-" }}</dd>
+
+                                            <dt class="col-sm-4">شغل پدر</dt>
+                                            <dd class="col-sm-8">{{ teacher.profile.father_job|default:"-" }}</dd>
+
+                                            <dt class="col-sm-4">محل اصلی</dt>
+                                            <dd class="col-sm-8">{{ user.profile.permanent_address|default:"-" }}</dd>
+
+                                            <dt class="col-sm-4">محل فعلی</dt>
+                                            <dd class="col-sm-8">{{ teacher.profile.current_address|default:"-" }}</dd>
+
+                                            <dt class="col-sm-4">تاریخ عضویت</dt>
+                                            <dd class="col-sm-8">{{ teacher.date_joined|date:"Y/m/d" }}</dd>
+
+                                            <dt class="col-sm-4">آخرین ورود</dt>
+                                            <dd class="col-sm-8">{{ teacher.last_login|date:"Y/m/d H:i" }}</dd>
+
+                                            <dt class="col-sm-4">ایجاد شده توسط</dt>
+                                            <dd class="col-sm-8">{{ teacher.created_by.get_full_name|default:"سیستم" }}</dd>
+
+                                            <dt class="col-sm-4">تاریخ ثبت</dt>
+                                            <dd class="col-sm-8">{{ teacher.created_at|date:"Y/m/d H:i" }}</dd>
+
+                                            <dt class="col-sm-4">آخرین بروزرسانی</dt>
+                                            <dd class="col-sm-8">{{ teacher.updated_at|date:"Y/m/d H:i" }}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- /.card -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -11,7 +11,7 @@ def profile_image_upload_path(instance, filename):
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = (
-        ('admin', 'Admin'),
+        ('manager', 'Manager'),
         ('teacher', 'Teacher'),
         ('student', 'Student'),
         ('parent', 'Parent'),
@@ -44,3 +44,17 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username} - {self.role}"
+
+
+class BaseProfile(models.Model):
+    father_name = models.CharField(max_length=100, blank=True, null=True)
+    education = models.CharField(max_length=150, blank=True, null=True)
+    father_job = models.CharField(max_length=100, blank=True, null=True)
+    permanent_address = models.CharField(max_length=200, blank=True, null=True)
+    current_address = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        abstract = True  # مدل پایه است، جدول جداگانه در دیتابیس نمی‌سازد
+
+    def __str__(self):
+        return f"{self.father_name or '---'}"

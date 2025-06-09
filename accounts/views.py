@@ -5,8 +5,8 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, D
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserUpdateForm, CustomUserCreateForm, LoginForm, CustomUserSignupForm
-from django.contrib.auth import authenticate, login
-from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .mixins import RoleRequiredMixin
 
@@ -26,7 +26,7 @@ class CustomUserCreationForm(LoginRequiredMixin, forms.ModelForm):
         return user
 
 
-class CustomUserCreateView(LoginRequiredMixin, CreateView):
+class UserCreateView(LoginRequiredMixin, CreateView):
     model = CustomUser
     form_class = CustomUserCreateForm
     template_name = 'accounts/user_create.html'
@@ -37,16 +37,16 @@ class CustomUserCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class CustomUserListView(RoleRequiredMixin, LoginRequiredMixin, ListView):
+class UserListView(RoleRequiredMixin, LoginRequiredMixin, ListView):
     required_role = None
     model = CustomUser
     template_name = 'accounts/user_list.html'
     context_object_name = 'users'
-    required_role = 'admin'  # اینجا نقش مورد نظر را مشخص می‌کنی
+    required_roles = ['manager', 'teacher']
     def get_queryset(self):
         return CustomUser.objects.filter(created_by=self.request.user)
 
-class CustomUserUpdateView(UpdateView):
+class UserUpdateView(UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm
     template_name = 'accounts/user_update.html'
@@ -54,14 +54,14 @@ class CustomUserUpdateView(UpdateView):
     def get_queryset(self):
         return CustomUser.objects.filter(created_by=self.request.user)
 
-class CustomUserDeleteView(DeleteView):
+class UserDeleteView(DeleteView):
     model = CustomUser
     template_name = 'accounts/user_confirm_delete.html'
     success_url = reverse_lazy('user_list')
     def get_queryset(self):
         return CustomUser.objects.filter(created_by=self.request.user)
     
-class UserProfileView(LoginRequiredMixin, DetailView):
+class ProfileView(LoginRequiredMixin, DetailView):
     model = CustomUser
     template_name = 'accounts/profile.html'
 
@@ -70,16 +70,24 @@ class UserProfileView(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = CustomUser
     form_class = CustomUserUpdateForm  # یا فرم ویرایش مخصوص پروفایل
     template_name = 'accounts/profile_update.html'
     success_url = reverse_lazy('profile')
 
     def get_object(self):
+        # فقط پروفایل خود کاربر
         return self.request.user
     
     
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = CustomUser
+    template_name = 'accounts/user_profile.html'  # مسیر قالب را خودت تنظیم کن
+    context_object_name = 'profile'
+    
+    def get_queryset(self):
+        return CustomUser.objects.filter(created_by=self.request.user)
     
 def login_view(request):
     form = LoginForm(request.POST or None)
@@ -100,6 +108,9 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 def signup_view(request):
     message = None
@@ -122,3 +133,38 @@ def signup_view(request):
 
 def custom_page_not_found_view(request, exception):
     return render(request, "404.html", status=404)
+
+
+
+
+
+def role_based_user_profile_view(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+
+    if user.role == 'teacher':
+        return redirect('teacher_profile', pk=user.pk)
+    elif user.role == 'manager':
+        return redirect('manager_profile', pk=user.pk)
+    elif user.role == 'student':
+        return redirect('student_profile', pk=user.pk)
+    elif user.role == 'parent':
+        return redirect('parent_profile', pk=user.pk)
+    else:
+        return redirect('home')  # یا صفحه‌ی پیش‌فرض
+    
+    
+    
+def role_based_user_update_view(request, pk):
+    user = get_object_or_404(CustomUser, pk=pk)
+
+    if user.role == 'teacher':
+        return redirect('teacher_update', pk=pk)
+    elif user.role == 'student':
+        return redirect('student_update', pk=pk)
+    elif user.role == 'parent':
+        return redirect('parent_update', pk=pk)
+    elif user.role == 'manager':
+        return redirect('manager_update', pk=pk)
+    else:
+        # fallback
+        return redirect('profile')  # یا پیام خطا نمایش بده

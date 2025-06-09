@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     
     #local apps
     'accounts',
+    'teachers',
+    'managers',
 ]
 
 
@@ -44,6 +46,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    # local middleware
+    'config.middleware.AdminLocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 MESSAGE_TAGS = {
@@ -107,13 +113,22 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# LANGUAGE_CODE = 'en-us'  # از 'fa' یا 'fa-ir' به 'en-us' تغییر بده
 
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'fa'  # زبان پیش‌فرض سایت
 
 USE_I18N = True
+USE_L10N = True
 
-USE_TZ = True
+LANGUAGES = [
+    ('fa', 'فارسی'),
+    ('en', 'English'),
+]
+
+LOCALE_PATHS = [
+    # مسیر فایل‌های ترجمه خودت
+]
+
 
 
 # Static files (CSS, JavaScript, Images)
